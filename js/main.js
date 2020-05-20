@@ -8,6 +8,7 @@ var bombsGenerated = false
 var firstClick = true
 var gameOn = false
 var reveals = 0
+var reveals2 = 0
 var gBombCount
 
 function startTimer() {
@@ -38,7 +39,7 @@ function creategBoard(length, numOfBombs) {
     for (var i = 0; i < length; i++) {
         gBoard[i] = [''];
         for (var j = 0; j < length; j++) {
-            gBoard[i][j] = { i: i, j: j, isBomb: false, isFlagged: false }
+            gBoard[i][j] = { i: i, j: j, isBomb: false, isFlagged: false, isRevealed: false }
         }
     }
 
@@ -87,12 +88,10 @@ function cellClicked(elCell, ev) {
         return
     }
 
-
     if (currCell.isFlagged === true) return
     if (currCell.isBomb === true && firstClick) {
         moveBomb(currCell)
         firstClick = false
-
     }
     if (currCell.isBomb === true) {
         alert('You lost!')
@@ -102,17 +101,17 @@ function cellClicked(elCell, ev) {
 
     } else {
         firstClick = false
-        elCell.innerText = countBombsAround(gBoard, currI, currJ)
-        reveals++
-        console.log(reveals);
-        // if (countBombsAround(gBoard, currI, currJ) === 0) {
-        //     revealNegs(gBoard, currI, currJ, currCell)
-
-        // }
-
-        //debugger
-        if (reveals === (gBoard.length * gBoard.length - gBombCount)) {
+        var bombsAround = countBombsAround(gBoard, currI, currJ)
+        currCell.isRevealed = true
+        elCell.innerText = bombsAround
+        if (bombsAround === 0) revealNegs(gBoard, currI, currJ)
+        var wins = checkWin()
+        if (wins === (gBoard.length * gBoard.length - gBombCount)) {
             console.log('Win');
+            alert('You won!')
+            revealAllBombs(gBoard)
+            gameOn = false
+            stopTime()
         }
     }
 
@@ -125,12 +124,36 @@ function revealNegs(mat, rowIdx, colIdx, cell) {
         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
             if (j < 0 || j > mat[0].length - 1) continue
             if (i === rowIdx && j === colIdx) continue
-            cell = mat[i][j]
-            document.querySelector(`[data-i="${i}"][data-j="${j}"]`).innerText = countBombsAround(gBoard, currI, currJ)
-
-            // if (cell.isBomb === true) bombCount++
+            var cell = mat[i][j]
+            var currCellDom = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+            currCellDom.innerText = countBombsAround(gBoard, i, j)
+            cell.isRevealed = true
+                // var currI = +elCell.getAttribute('data-i')
+                // var currJ = +elCell.getAttribute('data-j')
+                // var currCell = gBoard[currI][currJ]
+                // if (cell.isBomb === true) bombCount++
         }
     }
+
+}
+
+function checkWin() {
+    reveals2 = 0
+    for (var i = 0; i < gBoard.length; i++) {
+
+        for (var j = 0; j < gBoard.length; j++) {
+            var cell = gBoard[i][j]
+            if (cell.isRevealed === true) {
+
+                reveals2++
+
+
+            }
+
+        }
+    }
+    console.log('reveals 2', reveals2);
+    return reveals2
 
 }
 

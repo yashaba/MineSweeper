@@ -1,3 +1,8 @@
+var heartymbol = '&#x2764;'
+
+
+
+
 ////// random color 
 function getRandomColor() {
     var letters = '0123456789ABCDEF'.split('');
@@ -61,20 +66,21 @@ function countBombsAround(mat, rowIdx, colIdx) {
         }
     }
 
-    if (bombCount === 0) {
-        document.querySelector(`[data-i="${rowIdx}"][data-j="${colIdx}"]`).innerText = "0"
-        for (var i = rowIdx - 1;
-            (i <= rowIdx + 1 || i < 100); i++) {
-            if (i < 0 || i > mat.length - 1) continue
-            for (var j = colIdx - 1; j <= colIdx + 1; j++) {
-                if (j < 0 || j > mat[0].length - 1) continue
-                if (i === rowIdx && j === colIdx) continue
-                var cell = mat[i][j]
-                document.querySelector(`[data-i="${i}"][data-j="${j}"]`).innerText = countBombsAround(gBoard, cell.i, cell.j)
-            }
-        }
+    // if (bombCount === 0) {
+    //     document.querySelector(`[data-i="${rowIdx}"][data-j="${colIdx}"]`).innerText = "*"
+    //     for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
+    //         if (i < 0 || i > mat.length - 1) continue
+    //         for (var j = colIdx - 1; j <= colIdx + 1; j++) {
+    //             if (j < 0 || j > mat[0].length - 1) continue
+    //             if (i === rowIdx && j === colIdx) continue
+    //             var cell = mat[i][j]
+    //             if (cell.isBomb === true) return
 
-    }
+    //             document.querySelector(`[data-i="${i}"][data-j="${j}"]`).innerText = countBombsAround(gBoard, cell.i, cell.j)
+    //         }
+    //     }
+
+    // }
 
     return bombCount
 }
