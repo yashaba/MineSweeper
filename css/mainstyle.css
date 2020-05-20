@@ -1,0 +1,34 @@
+body {
+    background-color: black;
+}
+
+table {
+    margin: auto;
+}
+
+button {
+    display: inline-block;
+}
+
+.buttons {
+    margin: auto;
+    width: 300px;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    background-color: gray;
+    transition: 0.3s;
+}
+
+.cell:hover {
+    cursor: pointer;
+    background-color: rgb(172, 170, 170);
+}
+
+.cell img {
+    width: 25px;
+    height: auto
+}

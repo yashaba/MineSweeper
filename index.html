@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MineSweeper</title>
+    <link rel="stylesheet" href="css/mainstyle.css">
+
+</head>
+
+<body onload="play(4,2)">
+    <div class="buttons">
+        <button oncontextmenu="test()" onclick="play(4,2)"> 4x4 </button>
+        <button onmousedown="test()" onclick="play(8,12)"> 8x8 </button>
+        <button on onclick="play(12,30)"> 12x12 </button>
+        <button onclick="play(20)"> 20x20 </button>
+        <button class="timer"> Timer </button>
+    </div>
+
+
+    <table border="1" cellpadding="10">
+
+        <tbody class="board">
+
+        </tbody>
+
+        <script src="js/util.js"></script>
+        <script src="js/main.js"></script>
+
+</body>
+
+</html>
