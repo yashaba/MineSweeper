@@ -10,6 +10,8 @@ var reveals // The win condition
 var gBombCount
 var gHearts
 var playState //for the smiley replay to know what state to replay
+var gSafeclicks = 3
+var hintActivated = false
 
 function startTimer() {
     timerOn = true
@@ -71,13 +73,13 @@ function renderBoard(board) {
 
 
 function cellClicked(elCell, ev) {
-    if (gameOn === false) return
-    if (timerOn === false) startTimer()
+    if (!gameOn) return
+    if (!timerOn) startTimer()
     var currI = +elCell.getAttribute('data-i')
     var currJ = +elCell.getAttribute('data-j')
     var currCell = gBoard[currI][currJ]
 
-    if (ev.buttons === 2 && currCell.isFlagged === true) {
+    if (ev.buttons === 2 && currCell.isFlagged) {
         currCell.isFlagged = false
         elCell.innerText = ''
         return
@@ -88,13 +90,15 @@ function cellClicked(elCell, ev) {
         return
     }
 
-    if (currCell.isFlagged === true) return
-    if (currCell.isBomb === true && firstClick) {
+    if (currCell.isFlagged) return
+    if (currCell.isBomb && firstClick) {
         moveBomb(currCell)
         firstClick = false
+
     }
-    if (currCell.isBomb === true) {
+    if (currCell.isBomb) {
         removeHeart()
+        shakeCell(elCell)
 
 
     } else {
@@ -103,6 +107,7 @@ function cellClicked(elCell, ev) {
         currCell.isRevealed = true
         elCell.innerText = bombsAround
         elCell.style.backgroundColor = "gray"
+        elCell.style.color = getRandomColor()
         if (bombsAround === 0) revealNegs(gBoard, currI, currJ)
         var wins = checkWin()
         if (wins === (gBoard.length * gBoard.length - gBombCount)) {
@@ -126,6 +131,7 @@ function revealNegs(mat, rowIdx, colIdx, cell) {
             var cell = mat[i][j]
             var currCellDom = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
             currCellDom.innerText = countBombsAround(gBoard, i, j)
+            currCellDom.style.color = getRandomColor()
             cell.isRevealed = true
             currCellDom.style.backgroundColor = "gray"
                 // var currI = +elCell.getAttribute('data-i')
@@ -195,6 +201,7 @@ function generateBombs2(numOfBombs) {
 }
 
 function play(nums, numOfBombs) {
+    gSafeclicks = 3
     gHearts = 3
     gBombCount = 0
     gBoard = []
@@ -206,6 +213,7 @@ function play(nums, numOfBombs) {
     RenderHearts()
     renderSmiley(smileDefault)
     playState = { nums: nums, numOfBombs: numOfBombs }
+    document.querySelector(".safe-click").innerText = `SafeClick`
     console.log(playState);
 }
 
@@ -218,6 +226,7 @@ function revealAllBombs(mat) {
                 var bombCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
                 bombCell.innerHTML = bomb
                 bombCell.style.backgroundColor = "rgb(164, 23, 28)"
+                shakeCell(bombCell)
             }
         }
     }
@@ -243,9 +252,17 @@ function removeHeart() {
 }
 
 function RenderHearts() {
-    document.querySelector(".health").innerHTML = `<img src="img/heart.png">
+    document.querySelector(".health").innerHTML = `
+    <img src="img/heart.png">
     <img src="img/heart.png">
     <img src="img/heart.png">`
+}
+
+function RenderBulbs() {
+    document.querySelector(".health").innerHTML = `
+    <img onclick='bulbClicked' src="img/lightbulbOff.png">
+    <img onclick='bulbClicked' src="img/lightbulbOff.png">
+    <img onclick='bulbClicked' src="img/lightbulbOff.png">`
 }
 
 function renderSmiley(Condition) {

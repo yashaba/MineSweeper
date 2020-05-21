@@ -90,8 +90,6 @@ function countBombsAround(mat, rowIdx, colIdx) {
     return bombCount
 }
 
-
-//// life generator from game of life 
 function gBoardCreate(length) {
     var mat = [];
     var cell = {}
@@ -99,10 +97,56 @@ function gBoardCreate(length) {
         mat[i] = [''];
         for (var j = 0; j < length; j++) {
             mat[i][j] = cell
-
         }
+    }
+    return mat
+}
 
+function shakeCell(elCell) {
+    elCell.classList.add("anim")
+    setTimeout(function() {
+        elCell.classList.remove("anim")
+
+    }, 600)
+
+}
+
+
+
+function safeClick(gBoard) {
+    if (gSafeclicks < 1 || !gameOn) return
+    var randI = getRandomIntInclusive(0, gBoard.length - 1)
+    var randJ = getRandomIntInclusive(0, gBoard.length - 1)
+    var cell = gBoard[randI][randJ]
+
+    while (cell.isBomb) {
+        randI = getRandomIntInclusive(0, gBoard.length - 1)
+        randJ = getRandomIntInclusive(0, gBoard.length - 1)
+        cell = gBoard[randI][randJ]
     }
 
-    return mat
+    gSafeclicks--
+    document.querySelector(`[data-i="${cell.i}"][data-j="${cell.j}"]`).innerHTML = `<img src='img/letterS.png'>`
+    document.querySelector(".safe-click").innerText = `remaining:${gSafeclicks}`
+    console.log(cell);
+
+    setTimeout(function() {
+        if (cell.isRevealed) return
+        document.querySelector(`[data-i="${cell.i}"][data-j="${cell.j}"]`).innerText = ''
+    }, 2000)
+    return cell
+}
+
+
+
+function bulbClicked(elBulb) {
+    debugger
+    if (hintActivated) {
+        hintActivated = false
+            //change all back
+    }
+    hintActivated = true
+    elBulb.innerHTML = `<img src="img/lightbulbOn.png">`
+
+
 }

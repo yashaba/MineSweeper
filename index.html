@@ -24,11 +24,22 @@
         <tbody class="board">
         </tbody>
     </table>
-    <div class="timer"> Timer </div>
+
+    <div class="bottom-dash">
+        <div onclick="safeClick(gBoard)" class="safe-click"> SafeClick</div>
+        <div class="timer"> Timer </div>
+    </div>
+
     <div class="health">
         <img src="img/heart.png">
         <img src="img/heart.png">
         <img src="img/heart.png">
+    </div>
+    <div class="light">
+        <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
+        <img src="img/lightbulbOff.png">
+        <img src="img/lightbulbOff.png">
+
     </div>
 
     <script src="js/util.js"></script>
