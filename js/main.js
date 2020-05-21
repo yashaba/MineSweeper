@@ -62,13 +62,9 @@ function creategBoard(length, numOfBombs) {
             }
         }
     }
-
     generateBombs2(numOfBombs)
-
-    console.log(gBoard);
     return gBoard
 }
-
 
 
 function renderBoard(board) {
@@ -101,7 +97,6 @@ function cellClicked(elCell, ev) {
         activateClue(currCell, elCell, currI, currJ, gBoard)
         hintActivated = false
         return
-
     }
 
     if (ev.buttons === 2 && currCell.isFlagged) {
@@ -204,6 +199,9 @@ function revealNegs(mat, rowIdx, colIdx, cell) {
             currCellDom.style.color = getRandomColor()
             cell.isRevealed = true
             currCellDom.style.backgroundColor = "gray"
+            if (countBombsAround(gBoard, i, j) === 0) {
+                revealNegs(gBoard, i, j)
+            }
         }
     }
 
@@ -240,18 +238,23 @@ function checkWin() {
             }
         }
     }
-    console.log('reveals ', reveals);
     return reveals
 }
 
 function moveBomb(currCell) {
+    //debugger
     currCell.isBomb = false
-    var randI = getRandomIntInclusive(0, gBoard.length)
-    var randJ = getRandomIntInclusive(0, gBoard.length)
+    var randI = getRandomIntInclusive(0, gBoard.length - 1)
+    var randJ = getRandomIntInclusive(0, gBoard.length - 1)
     var cell = gBoard[randI][randJ]
+
+    if (currCell.i === cell.i && currCell.j === cell.j) {
+        moveBomb(currCell)
+        return
+    }
     if (cell.isBomb === false) {
         cell.isBomb = true
-    } else { moveBomb() }
+    } else { moveBomb(currCell) }
 }
 
 function generateBombs(numOfBombs, currCell) {
