@@ -99,7 +99,7 @@ button:hover {
     display: inline-block;
     background-color: white;
     width: 73px;
-    padding: 5px;
+    padding: 7px 5px 6px 5px;
     text-align: center;
     font-size: 14px;
     border: silver;
@@ -108,13 +108,17 @@ button:hover {
 }
 
 div.bottom-dash {
-    width: 170px;
+    width: 230px;
     margin: 10px auto;
 }
 
 div.light {
     width: 175px;
     margin: 10px auto;
+}
+
+.record {
+    background-color: blanchedalmond;
 }
 
 @keyframes shake {

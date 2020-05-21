@@ -11,12 +11,12 @@
 
 <body onload="play(4,2)">
     <div class="buttons">
-        <button onclick="play(4,2)"> easy </button>
-        <button onclick="play(8,12)"> medium </button>
-        <button onclick="play(12,30)"> hard </button>
+        <button onmousedown="changeColor(this)" onclick="play(4,2)"> easy </button>
+        <button onmousedown="changeColor(this)" onclick="play(8,12)"> medium </button>
+        <button onmousedown="changeColor(this)" onclick="play(12,30)"> hard </button>
 
     </div>
-    <div onclick="smileyReplay()" class="smiley">SMILEY </div>
+    <div onmousedown="changeColor(this)" onclick="smileyReplay()" class="smiley">SMILEY </div>
 
 
     <table border="7" cellpadding="4">
@@ -26,8 +26,9 @@
     </table>
 
     <div class="bottom-dash">
-        <div onclick="safeClick(gBoard)" class="safe-click"> SafeClick</div>
-        <div class="timer"> Timer </div>
+        <div onmousedown="changeColor(this)" onclick="safeClick(gBoard)" class="safe-click"> SafeClick</div>
+        <div onclick="changeColor(this)" class="timer"> Timer </div>
+        <div onclick="changeColor(this)" id="record" class="timer">Record </div>
     </div>
 
     <div class="health">
@@ -35,12 +36,14 @@
         <img src="img/heart.png">
         <img src="img/heart.png">
     </div>
+
     <div class="light">
         <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
-        <img src="img/lightbulbOff.png">
-        <img src="img/lightbulbOff.png">
+        <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
+        <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
 
     </div>
+
 
     <script src="js/util.js"></script>
     <script src="js/main.js"></script>

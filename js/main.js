@@ -12,26 +12,36 @@ var gHearts
 var playState //for the smiley replay to know what state to replay
 var gSafeclicks = 3
 var hintActivated = false
+var gBulb
+var gTimer = 0
+
+
 
 function startTimer() {
     timerOn = true
     var seconds = 0
-    var Milseconds = 0
+    var milseconds = 0
     setIntervalId = setInterval(function() {
-        Milseconds += 50
-        if (Milseconds === 1000) {
-            Milseconds = 0
+        milseconds += 50
+        gTimer += 50
+        if (milseconds === 1000) {
+            milseconds = 0
             seconds++
         }
-        var timer = seconds + "." + Milseconds
+        var timer = seconds + "." + milseconds
+
+
         document.querySelector(".timer").innerText = timer
     }, 50)
-
+    return gTimer
 }
+
+
 
 function stopTime() {
     clearInterval(setIntervalId)
     timerOn = false
+
 }
 
 
@@ -41,7 +51,15 @@ function creategBoard(length, numOfBombs) {
     for (var i = 0; i < length; i++) {
         gBoard[i] = [''];
         for (var j = 0; j < length; j++) {
-            gBoard[i][j] = { i: i, j: j, isBomb: false, isFlagged: false, isRevealed: false }
+            gBoard[i][j] = {
+                i: i,
+                j: j,
+                isBomb: false,
+                isFlagged: false,
+                isRevealed: false,
+                isRevealedByClue: false,
+                wasHintedBefore: false
+            }
         }
     }
 
@@ -79,11 +97,21 @@ function cellClicked(elCell, ev) {
     var currJ = +elCell.getAttribute('data-j')
     var currCell = gBoard[currI][currJ]
 
+    if (hintActivated) {
+        activateClue(currCell, elCell, currI, currJ, gBoard)
+        hintActivated = false
+        return
+
+    }
+
     if (ev.buttons === 2 && currCell.isFlagged) {
         currCell.isFlagged = false
-        elCell.innerText = ''
+        if (currCell.isRevealed || currCell.isRevealedByClue) {
+            elCell.innerText = countBombsAround(gBoard, currI, currJ)
+        } else elCell.innerText = ""
         return
     }
+
     if (ev.buttons === 2) {
         currCell.isFlagged = true
         elCell.innerHTML = flag
@@ -117,6 +145,46 @@ function cellClicked(elCell, ev) {
             gameOn = false
             stopTime()
             renderSmiley(smileWin)
+            changeBodyColor()
+
+            if (localStorage.bestTime === "null") {
+                localStorage.bestTime = gTimer
+                document.getElementById("record").innerHTML = gTimer / 1000
+            }
+            if (Number(localStorage.bestTime) > gTimer) {
+                localStorage.bestTime = gTimer
+                document.getElementById("record").innerHTML = gTimer / 1000
+            }
+        }
+    }
+}
+
+function activateClue(currCell, elCell, currI, currJ, gBoard) {
+    firstClick = false
+    currCell.innerText = countBombsAround(gBoard, currI, currJ)
+    if (currCell.isBomb) elCell.innerHTML = bomb
+    revealNegs2(gBoard, currI, currJ)
+    gBulb.setAttribute('src', "img/lightbulbEmpty.png")
+
+    setTimeout(function() {
+        hideNegs(gBoard, currI, currJ)
+
+    }, 1000)
+}
+
+function hideNegs(mat, rowIdx, colIdx) {
+    for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
+        if (i < 0 || i > mat.length - 1) continue
+        for (var j = colIdx - 1; j <= colIdx + 1; j++) {
+            if (j < 0 || j > mat[0].length - 1) continue
+            if (i === rowIdx && j === colIdx) continue
+            var cell = mat[i][j]
+            if (!cell.isRevealedByClue) continue
+            var currCellDom = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+            currCellDom.innerText = " "
+            currCellDom.style.color = ""
+            cell.isRevealed = false
+            currCellDom.style.backgroundColor = "white"
         }
     }
 }
@@ -129,15 +197,32 @@ function revealNegs(mat, rowIdx, colIdx, cell) {
             if (j < 0 || j > mat[0].length - 1) continue
             if (i === rowIdx && j === colIdx) continue
             var cell = mat[i][j]
+            if (cell.isRevealed) continue
             var currCellDom = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
             currCellDom.innerText = countBombsAround(gBoard, i, j)
             currCellDom.style.color = getRandomColor()
             cell.isRevealed = true
             currCellDom.style.backgroundColor = "gray"
-                // var currI = +elCell.getAttribute('data-i')
-                // var currJ = +elCell.getAttribute('data-j')
-                // var currCell = gBoard[currI][currJ]
-                // if (cell.isBomb === true) bombCount++
+        }
+    }
+
+}
+
+function revealNegs2(mat, rowIdx, colIdx, cell) {
+
+    for (var i = rowIdx - 1; i <= rowIdx + 1; i++) {
+        if (i < 0 || i > mat.length - 1) continue
+        for (var j = colIdx - 1; j <= colIdx + 1; j++) {
+            if (j < 0 || j > mat[0].length - 1) continue
+            if (i === rowIdx && j === colIdx) continue
+            var cell = mat[i][j]
+            if (cell.isRevealed) continue
+            var currCellDom = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+            currCellDom.innerText = countBombsAround(gBoard, i, j)
+            currCellDom.style.color = getRandomColor()
+            cell.isRevealedByClue = true
+            currCellDom.style.backgroundColor = "gray"
+            if (cell.isBomb) currCellDom.innerHTML = bomb
         }
     }
 
@@ -207,14 +292,30 @@ function play(nums, numOfBombs) {
     gBoard = []
     firstClick = true
     gameOn = true
+    hintActivated = false
+    gTimer = 0
     creategBoard(nums, numOfBombs)
     renderBoard(gBoard)
     stopTime()
     RenderHearts()
+    RenderBulbs()
     renderSmiley(smileDefault)
+    rendeRecord()
     playState = { nums: nums, numOfBombs: numOfBombs }
     document.querySelector(".safe-click").innerText = `SafeClick`
     console.log(playState);
+}
+
+function rendeRecord() {
+
+    if (!localStorage.bestTime) {
+        localStorage.bestTime = null;
+        document.getElementById("record").innerHTML = "Record"
+    } else {
+
+        document.getElementById("record").innerHTML = localStorage.bestTime / 1000
+    }
+
 }
 
 function revealAllBombs(mat) {
@@ -259,10 +360,10 @@ function RenderHearts() {
 }
 
 function RenderBulbs() {
-    document.querySelector(".health").innerHTML = `
-    <img onclick='bulbClicked' src="img/lightbulbOff.png">
-    <img onclick='bulbClicked' src="img/lightbulbOff.png">
-    <img onclick='bulbClicked' src="img/lightbulbOff.png">`
+    document.querySelector(".light").innerHTML = `
+    <img onclick='bulbClicked(this)' src="img/lightbulbOff.png">
+    <img onclick='bulbClicked(this)' src="img/lightbulbOff.png">
+    <img onclick='bulbClicked(this)' src="img/lightbulbOff.png">`
 }
 
 function renderSmiley(Condition) {
