@@ -11,23 +11,24 @@
 
 <body onload="play(4,2)">
     <div class="buttons">
-        <button oncontextmenu="test()" onclick="play(4,2)"> 4x4 </button>
-        <button onmousedown="test()" onclick="play(8,12)"> 8x8 </button>
-        <button on onclick="play(12,30)"> 12x12 </button>
-        <button onclick="play(20)"> 20x20 </button>
-        <button class="timer"> Timer </button>
+        <button onclick="play(4,2)"> easy </button>
+        <button onclick="play(8,12)"> medium </button>
+        <button onclick="play(12,30)"> hard </button>
+
     </div>
+    <div onclick="smileyReplay()" class="smiley">SMILEY </div>
 
 
-    <table border="1" cellpadding="10">
+    <table border="7" cellpadding="4">
 
         <tbody class="board">
         </tbody>
     </table>
+    <div class="timer"> Timer </div>
     <div class="health">
-        <img src="img/heart.png" alt="">
-        <img src="img/heart.png" alt="">
-        <img src="img/heart.png" alt="">
+        <img src="img/heart.png">
+        <img src="img/heart.png">
+        <img src="img/heart.png">
     </div>
 
     <script src="js/util.js"></script>

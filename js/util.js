@@ -1,4 +1,9 @@
 var heartymbol = '&#x2764;'
+var smileDefault = '&#128512';
+var smileLose = '&#129327';
+var smileWin = '&#128526';
+var flag = '&#128681'
+var bomb = '&#128163'
 
 
 

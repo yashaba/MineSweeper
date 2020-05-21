@@ -8,19 +8,37 @@ table {
 
 button {
     display: inline-block;
+    background-color: white;
+    padding: 5px;
+    text-align: center;
+    margin: 10px auto;
+    border: silver;
+    border-style: ridge;
+    font-family: fantasy;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: rgb(172, 170, 170);
 }
 
 .buttons {
     margin: auto;
     width: 300px;
+    text-align: center;
 }
 
 .cell {
     width: 40px;
     height: 40px;
     text-align: center;
-    background-color: gray;
+    background-color: white;
+    /* box-shadow: 30px black; */
     transition: 0.3s;
+    vertical-align: middle;
+    line-height: 40px;
 }
 
 .cell:hover {
@@ -34,7 +52,7 @@ button {
 }
 
 .health {
-    width: 159px;
+    width: 180px;
     margin: auto
 }
 
@@ -42,4 +60,30 @@ button {
     display: inline-block;
     /* width: 50px;
     margin: 15px auto; */
+}
+
+.smiley {
+    width: 40.5px;
+    height: 40px;
+    font-size: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px;
+    margin: 5px auto;
+    cursor: pointer;
+    background-color: silver;
+    border-radius: 50%;
+}
+
+.timer {
+    background-color: white;
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+    /* border-radius: 10%; */
+    margin: 10px auto;
+    font-variant-numeric: slashed-zero;
+    border: silver;
+    border-style: ridge;
+    font-family: fantasy;
 }
