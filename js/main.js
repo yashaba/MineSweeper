@@ -127,25 +127,26 @@ function cellClicked(elCell, ev) {
     if (currCell.isBomb) {
         removeHeart()
         shakeCell(elCell)
-
+        bombSound.play()
 
     } else {
+
         firstClick = false
         var bombsAround = countBombsAround(gBoard, currI, currJ)
         currCell.isRevealed = true
         elCell.innerText = bombsAround
         elCell.style.backgroundColor = "gray"
         elCell.style.color = getRandomColor()
+        clickSound.play()
         if (bombsAround === 0) revealNegs(gBoard, currI, currJ)
         var wins = checkWin()
         if (wins === (gBoard.length * gBoard.length - gBombCount)) {
-            console.log('Win');
-            alert('You won!')
             revealAllBombs(gBoard)
             gameOn = false
             stopTime()
             renderSmiley(smileWin)
             changeBodyColor()
+            winSound.play()
 
             if (localStorage.bestTime === "null") {
                 localStorage.bestTime = gTimer
@@ -344,11 +345,11 @@ function removeHeart() {
     heart.parentNode.removeChild(heart)
     gHearts--
     if (!gHearts) {
-        alert('You lost!')
         revealAllBombs(gBoard)
         gameOn = false
         stopTime()
         renderSmiley(smileLose)
+        loseSound.play()
     }
 }
 
