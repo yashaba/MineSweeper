@@ -1,9 +1,28 @@
+span {
+    cursor: default;
+}
+
+.manual {
+    background-color: white;
+    width: 100px;
+    text-align: center;
+    margin: auto;
+    cursor: pointer;
+    border-style: ridge;
+    font-family: fantasy;
+}
+
+.manual-father {
+    text-align: center;
+}
+
 body {
     background-color: black;
 }
 
 table {
     margin: auto;
+    margin-top: 5px;
 }
 
 button {
@@ -93,6 +112,7 @@ button:hover {
     border: silver;
     border-style: ridge;
     font-family: fantasy;
+    cursor: pointer;
 }
 
 .safe-click {
@@ -105,6 +125,7 @@ button:hover {
     border: silver;
     border-style: ridge;
     font-family: fantasy;
+    cursor: pointer;
 }
 
 div.bottom-dash {
@@ -115,6 +136,10 @@ div.bottom-dash {
 div.light {
     width: 175px;
     margin: 10px auto;
+}
+
+.light img {
+    cursor: pointer;
 }
 
 .record {

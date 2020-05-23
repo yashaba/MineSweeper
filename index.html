@@ -10,38 +10,44 @@
 </head>
 
 <body onload="play(4,2)">
-    <div class="buttons">
-        <button onmousedown="changeColor(this)" onclick="play(4,2)"> easy </button>
-        <button onmousedown="changeColor(this)" onclick="play(8,12)"> medium </button>
-        <button onmousedown="changeColor(this)" onclick="play(12,30)"> hard </button>
+    <div class="father-div">
+        <div class="buttons">
+            <button onmousedown="changeColor(this)" onclick="play(4,2)"> easy </button>
+            <button onmousedown="changeColor(this)" onclick="play(8,12)"> medium </button>
+            <button onmousedown="changeColor(this)" onclick="play(12,30)"> hard </button>
 
-    </div>
-    <div onmousedown="changeColor(this)" onclick="smileyReplay()" class="smiley">SMILEY </div>
+        </div>
+        <div onmousedown="changeColor(this)" onclick="smileyReplay()" class="smiley">SMILEY </div>
+        <div class="manual-father">
+            <div class="manual" onmousedown="manualMode(this)"> Manual </div>
+        </div>
 
 
-    <table border="7" cellpadding="4">
 
-        <tbody class="board">
-        </tbody>
-    </table>
+        <table border="7" cellpadding="4">
 
-    <div class="bottom-dash">
-        <div onmousedown="changeColor(this)" onclick="safeClick(gBoard)" class="safe-click"> SafeClick</div>
-        <div onclick="changeColor(this)" class="timer"> Timer </div>
-        <div onclick="changeColor(this)" id="record" class="timer">Record </div>
-    </div>
+            <tbody class="board">
+            </tbody>
+        </table>
 
-    <div class="health">
-        <img src="img/heart.png">
-        <img src="img/heart.png">
-        <img src="img/heart.png">
-    </div>
+        <div class="bottom-dash">
+            <div onmousedown="changeColor(this)" onclick="safeClick(gBoard)" class="safe-click"> SafeClick</div>
+            <div onclick="changeColor(this)" class="timer"> Timer </div>
+            <div onclick="changeColor(this)" id="record" class="timer">Record </div>
+        </div>
 
-    <div class="light">
-        <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
-        <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
-        <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
+        <div class="health">
+            <img src="img/heart.png">
+            <img src="img/heart.png">
+            <img src="img/heart.png">
+        </div>
 
+        <div class="light">
+            <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
+            <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
+            <img onclick="bulbClicked(this)" src="img/lightbulbOff.png">
+
+        </div>
     </div>
 
 

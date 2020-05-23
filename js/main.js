@@ -14,6 +14,9 @@ var gSafeclicks = 3
 var hintActivated = false
 var gBulb
 var gTimer = 0
+var gManualMode = false
+var gManuallyPlacedBombs = 0
+var gPickedBomb
 
 
 
@@ -75,7 +78,7 @@ function renderBoard(board) {
         for (var j = 0; j < board.length; j++) {
 
             strHTML += `<td class="cell" 
-        data-i="${i}" data-j="${j}" onmousedown="cellClicked(this,event)" oncontextmenu="return false"
+        data-i="${i}" data-j="${j}" ondragover="allowDrop(event)" ondrop="placeMine(this,event)" onmousedown="cellClicked(this,event)" oncontextmenu="return false"
                   >  </td>`
 
         }
@@ -89,9 +92,12 @@ function renderBoard(board) {
 function cellClicked(elCell, ev) {
     if (!gameOn) return
     if (!timerOn) startTimer()
+    if (gManualMode) return
     var currI = +elCell.getAttribute('data-i')
     var currJ = +elCell.getAttribute('data-j')
     var currCell = gBoard[currI][currJ]
+    console.log(currCell);
+
 
     if (hintActivated) {
         activateClue(currCell, elCell, currI, currJ, gBoard)
@@ -122,7 +128,7 @@ function cellClicked(elCell, ev) {
     if (currCell.isBomb) {
         removeHeart()
         shakeCell(elCell)
-        bombSound.play()
+            //bombSound.play()
 
     } else {
 
@@ -132,7 +138,7 @@ function cellClicked(elCell, ev) {
         elCell.innerText = bombsAround
         elCell.style.backgroundColor = "gray"
         elCell.style.color = getRandomColor()
-        clickSound.play()
+            // clickSound.play()
         if (bombsAround === 0) revealNegs(gBoard, currI, currJ)
         var wins = checkWin()
         if (wins === (gBoard.length * gBoard.length - gBombCount)) {
@@ -141,7 +147,7 @@ function cellClicked(elCell, ev) {
             stopTime()
             renderSmiley(smileWin)
             changeBodyColor()
-            winSound.play()
+                // winSound.play()
 
             if (localStorage.bestTime === "null") {
                 localStorage.bestTime = gTimer
@@ -298,6 +304,9 @@ function play(nums, numOfBombs) {
     gameOn = true
     hintActivated = false
     gTimer = 0
+    gManuallyPlacedBombs = 0
+    gManualMode = false
+
     creategBoard(nums, numOfBombs)
     renderBoard(gBoard)
     stopTime()
@@ -305,6 +314,7 @@ function play(nums, numOfBombs) {
     RenderBulbs()
     renderSmiley(smileDefault)
     rendeRecord()
+    reRenderManual()
     playState = { nums: nums, numOfBombs: numOfBombs }
     document.querySelector(".safe-click").innerText = `SafeClick`
     console.log(playState);
@@ -352,7 +362,7 @@ function removeHeart() {
         gameOn = false
         stopTime()
         renderSmiley(smileLose)
-        loseSound.play()
+            // loseSound.play()
     }
 }
 
@@ -378,4 +388,68 @@ function renderSmiley(Condition) {
 function smileyReplay() {
     play(playState.nums, playState.numOfBombs)
 
+}
+
+function manualMode(elManualMode) {
+    if (gManuallyPlacedBombs === playState.numOfBombs) return
+    if (!firstClick) return
+    gManualMode = true
+
+    if (gManuallyPlacedBombs === 0) {
+        for (var i = 0; i < gBoard.length; i++) {
+            for (var j = 0; j < gBoard.length; j++) {
+                var cell = gBoard[i][j]
+                cell.isBomb = false
+            }
+        }
+    }
+    console.log(gManualMode);
+    var leftBombs = ''
+    var rightBombs = ''
+    for (var i = 0; i < playState.numOfBombs / 2; i++) {
+        leftBombs += `<span ondrag="pickedBomb(this)" draggable='true'>${bomb}</span>`
+        rightBombs += `<span ondrag="pickedBomb(this)" draggable='true'>${bomb}</span>`
+    }
+    elManualMode.parentNode.innerHTML = `${leftBombs} <span class="manual">Manual</span> ${rightBombs} `
+}
+
+function placeMine(elCell, ev) {
+
+    if (!gManualMode) return
+    console.log(gManualMode, playState.numOfBombs, gManuallyPlacedBombs);
+    var currI = +elCell.getAttribute('data-i')
+    var currJ = +elCell.getAttribute('data-j')
+    var cell = gBoard[currI][currJ]
+    elCell.innerHTML = bomb
+    if (gManualMode) {
+        cell.isBomb = true
+        gManuallyPlacedBombs++
+        removePickedBomb()
+        console.log(cell);
+
+        if (gManuallyPlacedBombs === playState.numOfBombs) {
+            gManualMode = false
+            for (var i = 0; i < gBoard.length; i++) {
+                for (var j = 0; j < gBoard.length; j++) {
+                    var currCellDom = document.querySelector(`[data-i="${i}"][data-j="${j}"]`).innerHTML = ""
+                }
+            }
+        }
+    }
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function pickedBomb(elPick) {
+    gPickedBomb = elPick
+}
+
+function removePickedBomb() {
+    gPickedBomb.remove()
+}
+
+function reRenderManual() {
+    document.querySelector('.manual-father').innerHTML = `<div class="manual" onmousedown="manualMode(this)"> Manual </div>`
 }

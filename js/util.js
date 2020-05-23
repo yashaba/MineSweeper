@@ -4,10 +4,10 @@ var smileLose = '&#129327';
 var smileWin = '&#128526';
 var flag = '&#128681'
 var bomb = '&#128163'
-var bombSound = new Audio('sound/bomb.WAV')
-var clickSound = new Audio('sound/click.WAV')
-var loseSound = new Audio('sound/lose.WAV')
-var winSound = new Audio('sound/win.WAV')
+    // var bombSound = new Audio('sound/bomb.WAV')
+    // var clickSound = new Audio('sound/click.WAV')
+    // var loseSound = new Audio('sound/lose.WAV')
+    // var winSound = new Audio('sound/win.WAV')
 
 
 function getRandomColor() {
